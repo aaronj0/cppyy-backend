@@ -11,12 +11,10 @@
 #include <iostream>
 
 #include "callcontext.h"
-
-// #include "TCling.h"
-
-#include <CppInterOp/CppInterOp.h>
-
+#include "cppinterop_dispatch.h"
 // some more types; assumes Cppyy.h follows Python.h
+
+// using CppFinal 
 #ifndef PY_LONG_LONG
 #ifdef _WIN32
 typedef __int64 PY_LONG_LONG;
@@ -48,15 +46,6 @@ static inline size_t CALL_NARGS(size_t nargs) {
     return nargs & ~DIRECT_CALL;
 }
 
-// namespace cling
-// {
-// namespace cppyy
-// {
-//     extern inline cling::Interpreter * gCling = 0;
-// }
-// }
-//
-
 namespace Cppyy {
     typedef Cpp::TCppScope_t    TCppScope_t;
     typedef Cpp::TCppType_t     TCppType_t;
@@ -67,6 +56,8 @@ namespace Cppyy {
     typedef intptr_t                TCppFuncAddr_t;
 
 // // direct interpreter access -------------------------------------------------
+    // RPY_EXPORTED
+    // void AddSearchPath(const char* dir, bool isUser = true, bool prepend = false); 
     RPY_EXPORTED
     bool Compile(const std::string& code, bool silent = false);
     RPY_EXPORTED

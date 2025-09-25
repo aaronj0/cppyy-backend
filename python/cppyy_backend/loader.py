@@ -57,16 +57,16 @@ def _load_helper(bkname):
             pkgpath = os.path.dirname(__file__)
         elif os.path.basename(pkgpath) in ['lib', 'bin']:
             pkgpath = os.path.dirname(pkgpath)
-        for dep in ['libclangCppInterOp']:
-            for loc in ['lib', 'bin']:
-                fpath = os.path.realpath(os.path.join(pkgpath, loc, dep+soext))
-                if os.path.exists(fpath):
-                    # Do not load libclangInterOp if it was already loaded.
-                    if is_shared_object_loaded(fpath):
-                        continue
-                    ldtype = ctypes.RTLD_GLOBAL
-                    ctypes.CDLL(fpath, ldtype)
-                    break
+        # for dep in ['libclangCppInterOp']:
+        #     for loc in ['lib', 'bin']:
+        #         fpath = os.path.realpath(os.path.join(pkgpath, loc, dep+soext))
+        #         if os.path.exists(fpath):
+        #             # Do not load libclangInterOp if it was already loaded.
+        #             if is_shared_object_loaded(fpath):
+        #                 continue
+        #             ldtype = ctypes.RTLD_LOCAL
+        #             ctypes.CDLL(fpath, ldtype)
+        #             break
         return ctypes.CDLL(os.path.join(pkgpath, 'lib', bkname), ctypes.RTLD_GLOBAL), errors
     except OSError as e:
         errors.add(str(e))
@@ -97,6 +97,7 @@ def load_cpp_backend():
             names.append('libcppyy-backend'+soext2)
 
     err = set()
+    print("LOADING: " + str(names))
     for name in names:
         c, err2 = _load_helper(name)
         if c:
