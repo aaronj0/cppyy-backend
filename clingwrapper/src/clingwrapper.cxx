@@ -184,6 +184,7 @@ public:
         int isinit = CppDispatch::init_functions();
 
         if (auto * existingInterp = CppDispatch::GetInterpreter()) {
+            std::cout<<"Using existing interpreter at " << existingInterp << "\n";
             Interp = existingInterp;
         }
         else {
@@ -211,7 +212,7 @@ public:
             Interp = CppDispatch::CreateInterpreter({"-std=c++17", "-march=native"});
 #endif
 #else
-            Interp = CppDispatch::CreateInterpreter({"-std=c++17", "-march=native"}, {});
+            Interp = CppDispatch::CreateInterpreter({"-std=c++17", "-march=native"}, {}, nullptr);
 #endif
         }
 
