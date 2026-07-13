@@ -707,6 +707,13 @@ Cppyy::TCppScope_t Cppyy::GetScope(const std::string& name,
       bool added_new_type = !Cppyy::AppendTypesSlow(name, types, /*parent=*/parent_scope);
       std::lock_guard<std::recursive_mutex> Lock(InterOpMutex);
       if (added_new_type && types.size() == 1) {
+        // A pointer or reference spelling (e.g. "std::chrono::nanoseconds *",
+        // the return type of std::array<nanoseconds, N>::begin()) does not
+        // name a scope; GetScopeFromType would silently strip the pointer and
+        // return the pointee's scope, misclassifying the name.
+        if (Cpp::IsPointerType(types[0].m_Type) ||
+            Cpp::IsReferenceType(types[0].m_Type))
+          return nullptr;
         TCppScope_t scope = Cpp::GetScopeFromType(types[0].m_Type);
         // Naming the type as a template argument above does not instantiate
         // it, so the specialization may still be declared-but-undefined.
